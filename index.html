@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>互动声音叙事渲染器 · 空间音画视窗</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23111a28'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ffffff'/%3E%3Ccircle cx='24' cy='10' r='3' fill='%235ee6a8'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <div id="start-overlay">
+    <div class="overlay-card">
+      <h1>互动声音叙事渲染器</h1>
+      <p>环境声床 + 3 个独立空间声音对象（鸟鸣 / 脚步 / 钟声），统一时间基准、等功率声像与声源范围建模。</p>
+      <ul class="start-list">
+        <li>点击下方按钮启动 AudioContext（浏览器要求用户手势）。</li>
+        <li>建议佩戴立体声耳机；如通过 file:// 打开且 Worklet 受限，会自动降级并在反馈区说明。</li>
+        <li>推荐启动方式：在本目录执行 <code>python3 -m http.server 8000</code>，浏览器访问 <code>http://localhost:8000/</code>。</li>
+      </ul>
+      <button id="start-btn" class="primary-btn">启动对象声音</button>
+      <div id="start-error" class="start-error"></div>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div>
+      <h2>互动声音叙事渲染器</h2>
+      <div class="badges">
+        <span id="mode-badge" class="badge muted">未启动</span>
+        <span id="state-badge" class="badge muted">未启动</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <label class="budget-line">空间声道预算
+        <select id="budget-select"></select>
+      </label>
+      <button id="clear-anchors" class="mini-btn">清除手动锚点</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel view-panel">
+      <h3>空间音画视窗（可拖拽声音对象）</h3>
+      <canvas id="spatial-canvas" width="560" height="560"></canvas>
+      <div class="hint">虚线为当前段落路径参考；半透明圆为声源范围；白圈对象表示处于手动锚点；圆点大小映射实时能量。</div>
+      <div class="solo-row">
+        <button id="solo-bed" class="solo-btn">独听声床</button>
+        <button id="solo-o1" class="solo-btn" style="--c:#5ee6a8">独听鸟鸣</button>
+        <button id="solo-o2" class="solo-btn" style="--c:#7db7ff">独听脚步</button>
+        <button id="solo-o3" class="solo-btn" style="--c:#ffb45e">独听钟声</button>
+      </div>
+    </section>
+
+    <section class="panel control-panel">
+      <h3 id="segment-title">叙事段落</h3>
+      <div class="seg-btns">
+        <button id="seg-a" class="seg-btn active">段落 A · 林间破晓</button>
+        <button id="seg-b" class="seg-btn">段落 B · 回声回廊</button>
+      </div>
+
+      <div class="transport">
+        <button id="play-btn" class="primary-btn">播放</button>
+        <button id="pause-btn" class="ghost-btn">暂停</button>
+        <div class="time-readout"><span id="time-now">0.00</span>s / <span id="time-total">48</span>s
+          <span class="muted">（段落内 <span id="time-seg">0.00</span>s）</span>
+        </div>
+      </div>
+      <input id="timeline" type="range" min="0" max="48" step="0.05" value="0" />
+      <div class="seek-row">
+        <input id="seek-input" type="number" min="0" max="48" step="0.5" />
+        <button id="seek-btn" class="mini-btn">跳转</button>
+      </div>
+
+      <h4>方向 · 能量 · 范围</h4>
+      <div id="direction-panel" class="direction-panel"></div>
+      <div class="bed-meter-row">
+        <span>环境声床电平</span>
+        <div class="meter bed-meter"><div id="bed-meter-fill" class="meter-fill" style="background:#8aa0c8"></div></div>
+      </div>
+
+      <h4>对象坐标与锚点</h4>
+      <div id="anchor-row" class="anchor-row">
+        <div class="anchor-line"><span class="dot" style="background:#5ee6a8"></span>鸟鸣 <span id="pos-o1">(0, 0)</span><button id="release-o1" class="mini-btn" disabled>恢复轨迹</button></div>
+        <div class="anchor-line"><span class="dot" style="background:#7db7ff"></span>脚步 <span id="pos-o2">(0, 0)</span><button id="release-o2" class="mini-btn" disabled>恢复轨迹</button></div>
+        <div class="anchor-line"><span class="dot" style="background:#ffb45e"></span>钟声 <span id="pos-o3">(0, 0)</span><button id="release-o3" class="mini-btn" disabled>恢复轨迹</button></div>
+      </div>
+    </section>
+
+    <section class="panel result-panel">
+      <h3>结果区 · 轨迹 / 空间试听 / 渲染导出</h3>
+
+      <h4>叙事对象与路径定义</h4>
+      <div id="segment-meta" class="segment-meta"></div>
+
+      <h4>事件时序表（触发后高亮）</h4>
+      <div id="event-table" class="event-table"></div>
+      <h4>事件触发记录</h4>
+      <div id="event-log" class="log-box"></div>
+
+      <h4>导出实际渲染声音（离线信号链，非扬声器录音）</h4>
+      <div class="export-row">
+        <button id="export-segment" class="ghost-btn">导出当前段落 WAV</button>
+        <button id="export-full" class="ghost-btn">导出完整场景 WAV</button>
+      </div>
+      <div id="export-list" class="export-list"></div>
+
+      <h4>对象声音反馈（降级 / 失败均显式上报，不静默丢弃）</h4>
+      <div id="fault-box" class="log-box fault-box"></div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
