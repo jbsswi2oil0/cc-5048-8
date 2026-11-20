@@ -3,12 +3,17 @@
 import { AudioKernel } from './kernel.js';
 import { SpatialView, COLORS } from './view.js';
 import { NARRATIVE, OBJECT_IDS, BUDGET_LEVELS, SEGMENT_DURATION } from './narrative.js';
+import { AuditionPanel } from './spatial-filter/audition-panel.js';
 
 const $ = (id) => document.getElementById(id);
 
 const kernel = new AudioKernel();
 window.__k = kernel; // 调试/自动化测试句柄
 const view = new SpatialView($('spatial-canvas'), kernel);
+
+// 空间滤波试听面板：独立 AudioContext，由面板内播放按钮的用户手势激活，与主内核解耦
+const auditionPanel = new AuditionPanel();
+window.__af = auditionPanel;
 
 let started = false;
 let lastSegment = -1;

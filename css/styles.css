@@ -202,3 +202,60 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 6px 0; }
   .layout { grid-template-columns: 1fr; }
   .segment-meta { grid-template-columns: 1fr; }
 }
+
+/* ---------- 空间滤波试听面板 ---------- */
+.audition-panel { margin: 18px 20px 30px; }
+.af-controls {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin-bottom: 8px;
+}
+.af-controls label { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+.af-controls select {
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px;
+}
+.af-mode {
+  font-size: 12px; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--muted);
+}
+.af-mode.full { color: #8fd9ff; border-color: #2c5a7a; background: #122333; }
+.af-mode.budget { color: var(--warn); border-color: #7a5a2e; background: #2a2013; }
+.af-summary { margin: 12px 0; }
+.af-stat-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px;
+}
+.af-stat-grid > div {
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 9px; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.af-stat-grid span { color: var(--muted); font-size: 11px; }
+.af-stat-grid strong { font-size: 18px; color: var(--accent); }
+.af-worst {
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-left: 3px solid var(--warn);
+  border-radius: 8px; padding: 9px 12px; line-height: 1.8;
+}
+.af-chart {
+  width: 100%; height: 200px;
+  background: #0b1320; border: 1px solid var(--line); border-radius: 9px;
+}
+.af-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.af-table th, .af-table td {
+  text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--line);
+}
+.af-table th { color: var(--muted); font-weight: 500; }
+.af-table tr.dep-pos td:nth-child(2) { color: var(--warn); font-weight: 600; }
+.af-table tr.dep-gain td:nth-child(2) { color: var(--accent); }
+.af-events { margin-top: 12px; }
+.af-event {
+  background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 7px; padding: 5px 10px; margin: 4px 0; font-size: 12px;
+}
+.dot {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  margin-right: 6px; vertical-align: middle;
+}
+@media (max-width: 900px) {
+  .af-stat-grid { grid-template-columns: repeat(2, 1fr); }
+}

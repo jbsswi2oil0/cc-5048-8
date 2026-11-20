@@ -109,6 +109,37 @@
     </section>
   </main>
 
+  <section class="panel audition-panel">
+    <h3>空间滤波试听面板 · 每块卷积预算 / 全量渲染 A/B</h3>
+    <div class="af-controls">
+      <label>场景
+        <select id="af-scene"></select>
+      </label>
+      <label>每块卷积预算
+        <select id="af-budget"></select>
+      </label>
+      <button id="af-run" class="primary-btn">计算全量 / 预算两条链</button>
+      <button id="af-play-full" class="ghost-btn">试听全量渲染</button>
+      <button id="af-play-budget" class="ghost-btn">试听预算渲染</button>
+      <button id="af-stop" class="mini-btn">停止</button>
+      <button id="af-export-cmp" class="mini-btn">导出逐块对比 CSV</button>
+      <span id="af-mode-label" class="af-mode">尚未试听</span>
+    </div>
+    <div class="hint">全量渲染对全部对象每块做双耳 FIR 卷积；预算渲染按优先级分配，超出预算的对象折叠为中心等功率双单声道（0 卷积、不静音）。两链使用同一确定性声源与逐块几何，可直接 A/B 比较。</div>
+
+    <div id="af-summary" class="af-summary muted">选择场景与预算后点击「计算」。</div>
+    <h4>每块实际卷积数（对齐两耳输出的块级视图）</h4>
+    <canvas id="af-chart" class="af-chart"></canvas>
+
+    <h4>位置依赖 vs 增益依赖（缓存淘汰范围）</h4>
+    <div id="af-dependency"></div>
+
+    <div id="af-events" class="af-events"></div>
+
+    <h4>面板运行记录</h4>
+    <div id="af-log" class="log-box fault-box"></div>
+  </section>
+
   <script type="module" src="./js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "kind": "spatial-filter-regression",
+  "sourceScene": "shortest-deviation",
+  "description": "能听出预算偏差的最短横向轨迹：紧预算(2卷积/块)下探针被折叠，相对全量渲染能量差越过 1dB 阈值。",
+  "sampleRate": 48000,
+  "blockSize": 256,
+  "tightBudget": 2,
+  "thresholdDb": 1,
+  "shortestAudible": {
+    "durationSec": 0.228,
+    "peakDbDelta": 1.534,
+    "audible": true
+  },
+  "probeKeyframes": [
+    {
+      "t": 0,
+      "x": 0,
+      "y": 4
+    },
+    {
+      "t": 0.019,
+      "x": 0.5667,
+      "y": 3.8667
+    },
+    {
+      "t": 0.038,
+      "x": 1.1333,
+      "y": 3.7333
+    },
+    {
+      "t": 0.057,
+      "x": 1.7,
+      "y": 3.6
+    },
+    {
+      "t": 0.076,
+      "x": 2.2667,
+      "y": 3.4667
+    },
+    {
+      "t": 0.095,
+      "x": 2.8333,
+      "y": 3.3333
+    },
+    {
+      "t": 0.114,
+      "x": 3.4,
+      "y": 3.2
+    },
+    {
+      "t": 0.133,
+      "x": 2.8333,
+      "y": 3.3333
+    },
+    {
+      "t": 0.152,
+      "x": 2.2667,
+      "y": 3.4667
+    },
+    {
+      "t": 0.171,
+      "x": 1.7,
+      "y": 3.6
+    },
+    {
+      "t": 0.19,
+      "x": 1.1333,
+      "y": 3.7333
+    },
+    {
+      "t": 0.209,
+      "x": 0.5667,
+      "y": 3.8667
+    },
+    {
+      "t": 0.228,
+      "x": 0,
+      "y": 4
+    },
+    {
+      "t": 0.247,
+      "x": 0,
+      "y": 4
+    },
+    {
+      "t": 0.266,
+      "x": 0,
+      "y": 4
+    }
+  ],
+  "baseline": {
+    "peakDbDelta": 1.673,
+    "worstBlock": 39,
+    "worstBlockTimeSec": 0.2107,
+    "worstRmsError": 0.077108,
+    "totalConvolutions": {
+      "full": 4500,
+      "budget": 1500
+    }
+  },
+  "objects": [
+    {
+      "id": "probe",
+      "kind": "bell",
+      "priority": 1,
+      "baseGain": 0.7,
+      "bellFreq": 466.16
+    },
+    {
+      "id": "ref1",
+      "kind": "bird",
+      "priority": 3,
+      "baseGain": 0.5,
+      "bellFreq": null
+    },
+    {
+      "id": "ref2",
+      "kind": "footstep",
+      "priority": 2,
+      "baseGain": 0.5,
+      "bellFreq": null
+    }
+  ]
+}
